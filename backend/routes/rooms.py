@@ -11,11 +11,13 @@ def rooms_list():
 
     for doc in docs:
         room_data = doc.to_dict()
+        if room_data is None:
+            continue
 
         rooms.append(
             Room(
-            id= doc.id,                    
-            name= room_data.get("name"),
+            id= doc.id,
+            name= room_data.get("name", ""),
             members= room_data.get("members", []),
             createdAt= room_data.get("createdAt"),
             ))
@@ -32,12 +34,14 @@ def messages(room_id:str):
 
     for doc in docs:
         message_data = doc.to_dict()
+        if message_data is None:
+            continue
 
         messages_list.append(
             Message(
-            id= doc.id,                    
-            text= message_data.get("text"),
-            senderId= message_data.get("senderId"),
+            id= doc.id,
+            text= message_data.get("text", ""),
+            senderId= message_data.get("senderId", ""),
             createdAt= message_data.get("createdAt"),
             ))
 

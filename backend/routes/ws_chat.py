@@ -22,7 +22,7 @@ async def chat_room(ws: WebSocket, room_id: str):
         return
 
     room_doc = db.collection("chatrooms").document(room_id).get()
-    if not room_doc.exists or user_id not in room_doc.to_dict().get("members", []):
+    if not room_doc.exists or user_id not in (room_doc.to_dict() or {}).get("members", []):
         await ws.close(code=1008)
         return
 

@@ -1,7 +1,7 @@
-from jose import jwt
+from jose import jwt, JWTError
 from fastapi import HTTPException,APIRouter, Depends,Request,Response
 from settings import settings
-from models.auth import AuthRequest, LogInResponse, SignUpResponse, LogOutResponse
+from models.auth import AuthRequest, LogInResponse, LogInData, LogOutResponse, LogOutData, SignUpResponse, UserResponse
 from firebase_admin import auth
 import requests
 from datetime import datetime, timedelta
@@ -16,7 +16,7 @@ async def create_account(payload: AuthRequest):
     )
     return SignUpResponse(
             success=True,
-            data={"id": user.uid, "email":user.email }
+            data=UserResponse(id=user.uid, email=user.email)
         )
 
 @router.post("/login",response_model=LogInResponse)
@@ -40,26 +40,20 @@ async def login(payload: AuthRequest):
         "exp": datetime.utcnow() + timedelta(hours=24)
     }, settings.APP_SECRET, algorithm="HS256")
 
-    data = {
-        "access_token": token, 
-        "user":{
-            "id":firebase_uid,
-            "email":firebase_data["email"],
-        }
-    }
     return LogInResponse(
         success=True,
-        data=data
+        data=LogInData(
+            access_token=token,
+            user=UserResponse(id=firebase_uid, email=firebase_data["email"])
+        )
     )
-    
 
-def verify_token(token: str) -> str:
+
+def verify_token(token: str) -> str | None:
     try:
         payload = jwt.decode(token, settings.APP_SECRET, algorithms=["HS256"])
         return payload["sub"]
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
+    except JWTError:
         return None
 
 def get_current_user(request:Request):
@@ -86,11 +80,11 @@ async def logout(response: Response):
         key="access_token",
         path="/",
         httponly=True,
-        secure=False,     
+        secure=False,
         samesite="lax"
     )
 
     return LogOutResponse(
             success=True,
-            data={"message": "Logged out successfully"}
+            data=LogOutData(message="Logged out successfully")
         )
