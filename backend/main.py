@@ -1,23 +1,14 @@
-from fastapi import FastAPI,HTTPException, Depends, WebSocket, WebSocketDisconnect
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import auth
-from pydantic import BaseModel, EmailStr
-from jose import jwt
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routes.rooms import router as rooms_router
 from routes.ws_chat import router as ws_router
 from routes.auth import router as auth_router
-from db import db
-from settings import settings
 
 app = FastAPI()
 app.include_router(rooms_router)
 app.include_router(ws_router)
 app.include_router(auth_router)
 print(app.routes)
-
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,

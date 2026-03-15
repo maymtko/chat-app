@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from 'next/link'
 import { AppDispatch, RootState } from '@/lib/store'
-import { fetchRooms } from '@/lib/features/chat/chatSlice'
+import { fetchRooms, Room } from '@/lib/features/chat/chatSlice'
 import { useParams } from 'next/navigation'
 import { logout } from '@/hooks/logout'
 import { clearUserlogout } from '@/lib/features/auth/authSlice'
@@ -40,7 +40,7 @@ console.log('user',user);
     <div className='h-full flex flex-col justify-between'>
     <div className="p-4 space-y-2">
       <h2 className="font-bold mb-3">Chat Rooms</h2>
-      {rooms?.filter((item:any)=>item?.members?.includes(user?.id)).map((room:any) => (
+      {rooms?.filter((item: Room)=>item?.members?.includes(user?.id ?? '')).map((room: Room) => (
         <Link
           key={room.id}
           href={`/chat/${room.id}`}

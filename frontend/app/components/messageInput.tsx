@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { AppDispatch } from '@/lib/store'
 // import { sendMessage } from '@/lib/features/chat/chatSlice'
 import { useChatSocket } from "@/hooks/useChatSocket";
-import { addMessage } from '@/lib/features/chat/chatSlice';
+import { addMessage, Message } from '@/lib/features/chat/chatSlice';
 
 
 export default function MessageInput({ roomId }: { roomId: string }) {
@@ -15,7 +15,7 @@ export default function MessageInput({ roomId }: { roomId: string }) {
 //     dispatch(addMessage(msg));
 //   });
 
-  const onMessage = useCallback((msg: any) => {
+  const onMessage = useCallback((msg: Message) => {
   dispatch(addMessage(msg));
 }, [dispatch]);
 

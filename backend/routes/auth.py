@@ -1,9 +1,8 @@
 from jose import jwt
 from fastapi import HTTPException,APIRouter, Depends,Request,Response
 from settings import settings
-from models.auth import AuthRequest, LogInResponse, UserResponse, SignUpResponse, LogOutResponse
+from models.auth import AuthRequest, LogInResponse, SignUpResponse, LogOutResponse
 from firebase_admin import auth
-from db import db
 import requests
 from datetime import datetime, timedelta
 

@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Message } from "@/lib/features/chat/chatSlice";
 
 export function useChatSocket(
   roomId: string,
-  onMessage: (msg: any) => void
+  onMessage: (msg: Message) => void
 ) {
   const wsRef = useRef<WebSocket | null>(null);
   const [isOpen, setIsOpen] = useState(false);

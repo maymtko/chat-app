@@ -1,16 +1,22 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface Message {
-    senderId: string,
-    text: string,
-    createdAt: any
+export interface Message {
+    senderId: string
+    text: string
+    createdAt: string | null
+}
+
+export interface Room {
+    id: string
+    name: string
+    members: string[]
 }
 
 interface ChatState {
-  rooms: []
-  messages: Message[],
+  rooms: Room[]
+  messages: Message[]
   loading: boolean
-    chatLoading: boolean
+  chatLoading: boolean
   error: string | null
 }
 
@@ -32,7 +38,7 @@ export const fetchRooms = createAsyncThunk(
 
 export const fetchMessages = createAsyncThunk(
   'chat/fetchMessages',
-  async (roomId: string) => {   
+  async (roomId: string) => {
     const res = await fetch(`/api/rooms/${roomId}/messages`)
     return res.json()
   }
@@ -65,7 +71,7 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setMessages: (state, action:PayloadAction<any>) => {
+    setMessages: (state, action: PayloadAction<ChatState>) => {
       return action.payload;
     },
     addMessage: (state, action: PayloadAction<Message>) => {
@@ -89,10 +95,10 @@ const chatSlice = createSlice({
         s.messages = a.payload.messages
         s.chatLoading = false
       })
-      .addCase(fetchMessages.rejected, (s:any, a) => {
+      .addCase(fetchMessages.rejected, (s, a) => {
         s.chatLoading = false
-        s.error = a.payload
-      })      
+        s.error = a.payload as string ?? null
+      })
       .addCase(sendMessage.fulfilled, (s, a) => {
         s.messages.push(a.payload)
       })

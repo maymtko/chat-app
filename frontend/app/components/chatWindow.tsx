@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/lib/store'
-import { fetchMessages } from '@/lib/features/chat/chatSlice'
+import { fetchMessages, Message } from '@/lib/features/chat/chatSlice'
 import MessageInput from './messageInput'
 import { clearMessages } from '@/lib/features/chat/chatSlice'
 
@@ -31,7 +31,7 @@ export default function ChatWindow({ roomId }: { roomId: string }) {
         ):
         (
          <>
-            {messages.map((msg:any,index:number) => (
+            {messages.map((msg: Message, index: number) => (
             <div  key={index} className={`flex ${user?.id===msg.senderId ? "justify-end" : "justify-start"}`}>
               <div className={`text-black p-2 rounded-lg ${user?.id===msg.senderId ? "bg-green-200":"bg-gray-100"}`}>
                 <div className={`mb-1 text-gray-700 `}>

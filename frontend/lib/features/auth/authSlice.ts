@@ -1,7 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
+export interface User {
+  id: string
+  email: string
+}
+
 interface AuthState {
-  user: any | null
+  user: User | null
   token: string | null
   loading: boolean
   error: string | null
@@ -36,32 +41,12 @@ export const loginUser = createAsyncThunk(
 )
 export const fetchUser = createAsyncThunk(
   'auth/user',
-  async (_, thunkAPI) => {
+  async () => {
     const res = await fetch('/api/auth/user')
     if (!res.ok) throw new Error('Not authenticated')
     return res.json()
   }
 )
-// export const logoutUser = createAsyncThunk(
-//   'auth/logout',
-//   async (
-//     credentials: { email: string; password: string },
-//     thunkAPI
-//   ) => {
-//     const res = await fetch('/api/auth/logout', {
-//       method: 'POST',
-//       // headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(credentials),
-//     })
-
-//     if (!res.ok) {
-//       const error = await res.json()
-//       return thunkAPI.rejectWithValue(error.detail || 'Logout failed')
-//     }
-
-//     return res.json()
-//   }
-// )
 
 const authSlice = createSlice({
   name: 'auth',
@@ -83,9 +68,9 @@ const authSlice = createSlice({
         state.token = action.payload.access_token
         state.user = action.payload.user
       })
-      .addCase(loginUser.rejected, (state, action: any) => {
+      .addCase(loginUser.rejected, (state, action) => {
         state.loading = false
-        state.error = action.payload
+        state.error = action.payload as string ?? null
       })
      .addCase(fetchUser.pending, (state) => {
         state.loading = true
