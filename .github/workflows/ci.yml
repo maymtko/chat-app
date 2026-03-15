@@ -69,4 +69,8 @@ jobs:
           pyright
 
       - name: Test
+        env:
+          FIREBASE_CREDENTIALS: '{"type":"service_account"}'
+          FIREBASE_API_KEY: test-key
+          APP_SECRET: test-secret
         run: pytest tests/ -v
