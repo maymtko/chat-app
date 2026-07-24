@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  const { user } = useSelector((state: RootState) => state.auth)
+  const { user, loading } = useSelector((state: RootState) => state.auth)
   const router = useRouter()
 
   useEffect(() => {
@@ -15,14 +15,16 @@ export default function Home() {
       router.replace('/chat')
     }
   }, [user, router])
+
+  if (loading || user) {
+    return (
+      <main className="w-full h-screen flex items-center justify-center">
+      </main>
+    )
+  }
   return (
     <main className="w-full h-screen flex items-center justify-center">
-      {/* {user ? (
-        <h1 className="text-xl">Welcome {user.email}</h1>
-      ) : 
-      ( */}
-        <AuthForm />
-       {/* )}  */}
+      <AuthForm />
     </main>
   )
 }

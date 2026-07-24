@@ -3,6 +3,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 export interface User {
   id: string
   email: string
+  display_name : string 
+  photo_url: string 
 }
 
 interface AuthState {
@@ -40,9 +42,9 @@ export const loginUser = createAsyncThunk(
   }
 )
 export const fetchUser = createAsyncThunk(
-  'auth/user',
+  'auth/me',
   async () => {
-    const res = await fetch('/api/auth/user')
+    const res = await fetch('/api/auth/me')  
     if (!res.ok) throw new Error('Not authenticated')
     return res.json()
   }
@@ -76,7 +78,7 @@ const authSlice = createSlice({
         state.loading = true
       })
      .addCase(fetchUser.fulfilled, (state, action) => {
-        state.user = action.payload
+        state.user = action.payload.data
         state.loading = false
       })
      .addCase(fetchUser.rejected, (state) => {

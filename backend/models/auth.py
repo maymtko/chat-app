@@ -1,12 +1,25 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
-class AuthRequest(BaseModel):
+class AuthSignupRequest(BaseModel):
+    email: EmailStr
+    password: str
+    display_name: str
+    photo_url: str
+
+class AuthSigninRequest(BaseModel):
     email: EmailStr
     password: str
 
 class UserResponse(BaseModel):
     id: str
     email: EmailStr
+    display_name: Optional[str] = ""
+    photo_url: Optional[str] = None
+
+class UpdateProfileRequest(BaseModel):
+    display_name: str | None = None
+    photo_url: str | None = None
 
 class SignUpResponse(BaseModel):
     success: bool

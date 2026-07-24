@@ -6,9 +6,6 @@ import Link from 'next/link'
 import { AppDispatch, RootState } from '@/lib/store'
 import { fetchRooms, Room } from '@/lib/features/chat/chatSlice'
 import { useParams } from 'next/navigation'
-import { logout } from '@/hooks/logout'
-import { clearUserlogout } from '@/lib/features/auth/authSlice'
-import { useRouter } from "next/navigation";
 
 export default function ChatRoomList() {
   const dispatch = useDispatch<AppDispatch>()
@@ -18,8 +15,7 @@ export default function ChatRoomList() {
  const { user } = useSelector(
     (state: RootState) => state.auth
   )
-  const { roomId }=useParams();
-  const router = useRouter();
+  const { roomId }= useParams();
 
   useEffect(() => {
     if(user?.id){
@@ -27,31 +23,29 @@ export default function ChatRoomList() {
     }
   }, [dispatch,user?.id])
 
-  if (loading) return <p className="p-4">Loading...</p>
-
-  const LogOutUser =() =>{
-    logout();
-    router.push("/");
-    dispatch(clearUserlogout())
-  }
-console.log('user',user);
+  if (loading) {
+      return (
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 animate-pulse">
+          <div className="h-5 w-24 bg-gray-300 dark:bg-zinc-700 rounded mb-4"></div>
+          <div className="h-10 w-full bg-gray-200 dark:bg-zinc-500 rounded"></div>
+          <div className="h-10 w-full bg-gray-200 dark:bg-zinc-500 rounded"></div>
+          <div className="h-10 w-full bg-gray-200 dark:bg-zinc-500 rounded"></div>
+        </div>
+      )
+    }
 
   return (
-    <div className='h-full flex flex-col justify-between'>
-    <div className="p-4 space-y-2">
+    <div className='flex-1 overflow-y-auto p-4 space-y-2'>
       <h2 className="font-bold mb-3">Chat Rooms</h2>
       {rooms?.filter((item: Room)=>item?.members?.includes(user?.id ?? '')).map((room: Room) => (
         <Link
           key={room.id}
           href={`/chat/${room.id}`}
-          className={`block p-2 rounded hover:bg-gray-300 ${roomId===room.id ? "bg-gray-300 text-black":""}`}
+          className={`block p-2 rounded hover:bg-gray-100 dark:hover:text-black ${roomId===room.id ? "bg-blue-50 text-blue-600":""}`}
         >          
           {room.name}
         </Link>
       ))}
-    </div>
-    <div onClick={LogOutUser}
-    className='p-2 text-center font-semibold bg-gray-300 hover:bg-gray-400 text-black'>Log Out</div>
     </div>
   )
 }

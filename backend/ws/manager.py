@@ -17,19 +17,43 @@ from fastapi import WebSocket
 
 class ConnectionManager:
     def __init__(self):
-        self.rooms: dict[str, set[WebSocket]] = {}
+        # self.rooms: dict[str, set[WebSocket]] = {}
+        self.rooms: dict[str, list] = {}
 
-    async def connect(self, room_id: str, websocket: WebSocket):
+
+    async def connect(self, room_id: str, websocket: WebSocket, user_info):
         if room_id not in self.rooms:
-            self.rooms[room_id] = set()
-        self.rooms[room_id].add(websocket)
+            self.rooms[room_id] = []
+            # self.rooms[room_id] = set()
+        # self.rooms[room_id].add(websocket)
+        self.rooms[room_id].append({
+            "ws": websocket,
+            "user": user_info
+        })
 
     def disconnect(self, room_id: str, websocket: WebSocket):
-        self.rooms.get(room_id, set()).discard(websocket)
+        if room_id in self.rooms:
+            self.rooms[room_id] = [
+                conn
+                for conn in self.rooms[room_id]
+                if conn["ws"] != websocket
+            ]
+
+        # self.rooms.get(room_id, set()).discard(websocket)
 
     async def broadcast(self, room_id: str, message: dict):
-        for ws in self.rooms.get(room_id, []):
-            await ws.send_json(message)
+        # print(f"Connections in room {room_id}: {len(self.rooms.get(room_id, []))}")
+        # for ws in self.rooms.get(room_id, []):
+        #     print("Sending:", message)
+        #     await ws.send_json(message)
+        connections = self.rooms.get(room_id, [])
+
+        print(f"Connections in room {room_id}: {len(connections)}")
+
+        for conn in connections:
+            print("Sending:", message)
+            await conn["ws"].send_json(message)
+
 
 
 manager = ConnectionManager()

@@ -42,6 +42,8 @@ def messages(room_id:str):
             id= doc.id,
             text= message_data.get("text", ""),
             senderId= message_data.get("senderId", ""),
+            name= message_data.get("name", ""),
+            photoUrl= message_data.get("photoUrl",""),
             createdAt= message_data.get("createdAt"),
             ))
 

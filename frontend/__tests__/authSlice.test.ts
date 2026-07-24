@@ -9,7 +9,7 @@ describe('authSlice', () => {
 
   it('clears user and token on logout', () => {
     const loggedInState = {
-      user: { id: '123', email: 'test@example.com' },
+      user: { id: '123', email: 'test@example.com', display_name: "May",photo_url: "", },
       token: 'some-token',
       loading: false,
       error: null,

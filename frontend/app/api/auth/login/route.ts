@@ -11,7 +11,6 @@ export async function POST(req: Request) {
   })
 
   const apiResponse = await res.json()
-  console.log('data usuer',apiResponse);
   
   if (!res.ok) {
     return NextResponse.json(apiResponse, { status: res.status })

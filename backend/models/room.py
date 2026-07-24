@@ -16,6 +16,8 @@ class RoomsResponse(BaseModel):
 class Message(BaseModel):
     id: str
     senderId : str
+    name: str
+    photoUrl: str
     text: str
     createdAt: Optional[datetime] 
 

@@ -1,10 +1,27 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface Message {
+    id: string
     senderId: string
     text: string
-    createdAt: string | null
+    createdAt: string
+    name: string | null
+    photoUrl: string | null
 }
+
+export interface SocketChatMessage extends Message {
+    type: "message";
+}
+
+export interface TypingEvent {
+    type: "typing";
+    senderId: string;
+    username: string;
+    photoUrl: string | null;
+    isTyping: boolean;
+}
+
+export type SocketEvent = SocketChatMessage | TypingEvent;
 
 export interface Room {
     id: string

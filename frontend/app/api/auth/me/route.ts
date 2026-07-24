@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 export async function GET(req: Request) {
   const cookie = req.headers.get('cookie') || ''
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/user`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/me`, {
     headers: {
       cookie,
     },

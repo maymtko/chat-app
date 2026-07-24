@@ -1,18 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Message } from "@/lib/features/chat/chatSlice";
+import { SocketEvent } from "@/lib/features/chat/chatSlice";
 
 export function useChatSocket(
   roomId: string,
-  onMessage: (msg: Message) => void
+  onMessage: (msg: SocketEvent) => void
 ) {
   const wsRef = useRef<WebSocket | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const onMessageRef = useRef(onMessage);
+
+  useEffect(() => {
+  onMessageRef.current = onMessage;
+}, [onMessage]);
 
   useEffect(() => {
     if (!roomId) return;
-
+  console.log("Creating websocket");
     const ws = new WebSocket(
       `ws://localhost:8000/ws/rooms/${roomId}`
     );
@@ -25,7 +30,9 @@ export function useChatSocket(
     };
 
     ws.onmessage = (event) => {
-      onMessage(JSON.parse(event.data));
+      // onMessage(JSON.parse(event.data));
+      onMessageRef.current(JSON.parse(event.data));
+      console.log('message event',JSON.parse(event.data));    
     };
 
     ws.onclose = () => {
@@ -33,10 +40,11 @@ export function useChatSocket(
     };
 
     return () => {
+      console.log("Closing websocket");
       ws.close();
       wsRef.current = null;
     };
-  }, [roomId, onMessage]);
+  }, [roomId]);
 
   const sendMessage = (text: string) => {
     if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
@@ -47,5 +55,9 @@ export function useChatSocket(
     wsRef.current.send(JSON.stringify({ text }));
   };
 
-  return { sendMessage, isOpen };
+  return { 
+    sendMessage, 
+    isOpen, 
+    socket: wsRef 
+  };
 }
