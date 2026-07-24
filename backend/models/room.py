@@ -1,16 +1,17 @@
-from pydantic import BaseModel
-from typing import List, Optional
 from datetime import datetime
+
+from pydantic import BaseModel
+
 
 class Room(BaseModel):
     id: str
     name: str
-    createdAt: Optional[datetime] 
-    members: List[str]
+    createdAt: datetime | None 
+    members: list[str]
 
 class RoomsResponse(BaseModel):
     success: bool
-    rooms: List[Room]
+    rooms: list[Room]
 
 
 class Message(BaseModel):
@@ -19,9 +20,9 @@ class Message(BaseModel):
     name: str
     photoUrl: str
     text: str
-    createdAt: Optional[datetime] 
+    createdAt: datetime | None 
 
 
 class MessagesReponse(BaseModel):
     success: bool
-    messages: List[Message]
+    messages: list[Message]

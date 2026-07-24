@@ -1,5 +1,6 @@
-from typing import Optional
+
 from pydantic import BaseModel, EmailStr
+
 
 class AuthSignupRequest(BaseModel):
     email: EmailStr
@@ -14,8 +15,8 @@ class AuthSigninRequest(BaseModel):
 class UserResponse(BaseModel):
     id: str
     email: EmailStr
-    display_name: Optional[str] = ""
-    photo_url: Optional[str] = None
+    display_name: str | None = ""
+    photo_url: str | None = None
 
 class UpdateProfileRequest(BaseModel):
     display_name: str | None = None

@@ -1,10 +1,22 @@
-from jose import jwt, JWTError
-from fastapi import HTTPException,APIRouter, Depends,Request,Response
-from settings import settings
-from models.auth import AuthSignupRequest, AuthSigninRequest, LogInResponse, LogInData, LogOutResponse, LogOutData, SignUpResponse, UserResponse, UpdateProfileRequest
+from datetime import datetime, timedelta, timezone
+
+import httpx
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from firebase_admin import auth
-import requests
-from datetime import datetime, timedelta
+from jose import JWTError, jwt
+
+from models.auth import (
+    AuthSigninRequest,
+    AuthSignupRequest,
+    LogInData,
+    LogInResponse,
+    LogOutData,
+    LogOutResponse,
+    SignUpResponse,
+    UpdateProfileRequest,
+    UserResponse,
+)
+from settings import settings
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -30,11 +42,15 @@ async def create_account(payload: AuthSignupRequest):
 async def login(payload: AuthSigninRequest):
     url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={settings.FIREBASE_API_KEY}"
 
-    res = requests.post(url, json={
-        "email": payload.email,
-        "password": payload.password,
-        "returnSecureToken": True
-    })
+    async with httpx.AsyncClient() as client:
+        res = await client.post(
+            url,
+            json={
+                "email": payload.email,
+                "password": payload.password,
+                "returnSecureToken": True,
+            },
+        )
 
     if res.status_code != 200:
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -44,7 +60,7 @@ async def login(payload: AuthSigninRequest):
     print(firebase_uid,firebase_data)
     token = jwt.encode({
         "sub": firebase_uid,
-        "exp": datetime.utcnow() + timedelta(hours=24)
+        "exp": datetime.now(timezone.utc) + timedelta(hours=24)
     }, settings.APP_SECRET, algorithm="HS256")
 
     return LogInResponse(

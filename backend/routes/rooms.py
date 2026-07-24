@@ -1,6 +1,7 @@
 from fastapi import APIRouter
-from models.room import RoomsResponse, Room, Message, MessagesReponse
+
 from db import db
+from models.room import Message, MessagesReponse, Room, RoomsResponse
 
 router = APIRouter(prefix="/rooms", tags=["Rooms"])
 

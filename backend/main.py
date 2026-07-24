@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from routes.auth import router as auth_router
 from routes.rooms import router as rooms_router
 from routes.ws_chat import router as ws_router
-from routes.auth import router as auth_router
 
 app = FastAPI()
 app.include_router(rooms_router)

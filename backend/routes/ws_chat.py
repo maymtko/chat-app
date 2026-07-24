@@ -1,10 +1,12 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect,status
+from datetime import datetime, timezone
+
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, status
+from firebase_admin import auth
+
 from db import db
-from datetime import datetime
 from routes.auth import verify_token
 from ws.manager import manager
-from firebase_admin import auth
-from datetime import datetime, timezone
+
 router = APIRouter()
 
 @router.websocket("/ws/rooms/{room_id}")
