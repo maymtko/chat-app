@@ -1,8 +1,10 @@
+from typing import Any
+
 from pydantic_settings import BaseSettings
-from typing import Union, Dict, Any
+
 
 class Settings(BaseSettings):
-    FIREBASE_CREDENTIALS: Union[str, Dict[str, Any]]
+    FIREBASE_CREDENTIALS: str | dict[str, Any]
     FIREBASE_API_KEY: str
     APP_SECRET: str
 
