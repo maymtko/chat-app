@@ -21,3 +21,5 @@ out/
 
 # Virtualenv
 venv/
+
+backend/env.yaml
