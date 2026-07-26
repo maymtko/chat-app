@@ -1,6 +1,8 @@
 import base64
+import binascii
 import json
 import os
+
 import firebase_admin
 from firebase_admin import credentials, firestore
 
@@ -21,7 +23,7 @@ if isinstance(raw_creds, str):
         try:
             decoded_bytes = base64.b64decode(raw_creds)
             cred_dict = json.loads(decoded_bytes.decode("utf-8"))
-        except Exception:
+        except (binascii.Error, UnicodeDecodeError, json.JSONDecodeError):
             # Case C: Fallback to raw JSON string
             cred_dict = json.loads(raw_creds)
 elif isinstance(raw_creds, dict):
