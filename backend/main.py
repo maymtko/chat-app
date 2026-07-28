@@ -13,12 +13,13 @@ app.include_router(auth_router)
 # Allowed origins
 origins = [
     "http://localhost:3000",
-    "https://*.vercel.app",  
+    "https://chat-app-may-0038.vercel.app",
+
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
