@@ -13,8 +13,9 @@ router = APIRouter()
 async def chat_room(ws: WebSocket, room_id: str):
     # token = ws.query_params.get("token")
     await ws.accept()
-    token = ws.cookies.get("access_token")
+    token = ws.query_params.get("token") or ws.cookies.get("access_token")
     if not token:
+        print("WS Auth Error: Token missing")
         await ws.close(code=status.WS_1008_POLICY_VIOLATION)
         return
 

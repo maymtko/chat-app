@@ -17,7 +17,21 @@ export function useChatSocket(
 
   useEffect(() => {
     if (!roomId) return;
+
     console.log("Creating websocket");
+    let isMounted = true;
+
+    async function connectSocket() {
+      try {
+        // Fetch token from Next.js server route (reads httpOnly cookie)
+        const res = await fetch("/api/ws-token");
+        if (!res.ok) {
+          console.warn("Failed to retrieve WS auth token");
+          return;
+        }
+        const { token } = await res.json();
+
+    if (!isMounted) return;
     const rawBackendUrl =
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -26,7 +40,7 @@ export function useChatSocket(
 
     const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       
-    const wsUrl = `${wsProtocol}//${cleanHost}/ws/rooms/${roomId}`;
+    const wsUrl = `${wsProtocol}//${cleanHost}/ws/rooms/${roomId}?token=${token}`;
     console.log("Connecting to WebSocket:", wsUrl);
     const ws = new WebSocket(wsUrl);
 
@@ -46,11 +60,20 @@ export function useChatSocket(
     ws.onclose = () => {
       setIsOpen(false);
     };
+    } catch (err) {
+        console.error("Error setting up WebSocket:", err);
+    }
+  }
 
-    return () => {
-      console.log("Closing websocket");
-      ws.close();
-      wsRef.current = null;
+  connectSocket();
+
+  return () => {
+      isMounted = false;
+      if (wsRef.current) {
+        console.log("Closing websocket");
+        wsRef.current.close();
+        wsRef.current = null;
+      }
     };
   }, [roomId]);
 
