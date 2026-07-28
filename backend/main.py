@@ -9,11 +9,16 @@ app = FastAPI()
 app.include_router(rooms_router)
 app.include_router(ws_router)
 app.include_router(auth_router)
-print(app.routes)
+
+# Allowed origins
+origins = [
+    "http://localhost:3000",
+    "https://*.vercel.app",  
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
