@@ -16,7 +16,7 @@ export function AppInit({ children }: { children: React.ReactNode }) {
 
     if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center dark:bg-black">
         Loading...
       </div>
     )

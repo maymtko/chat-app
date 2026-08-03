@@ -73,7 +73,7 @@ export default function ChatWindow({ roomId }: { roomId: string }) {
   return (
     <div className='relative h-full'>
     <div
-    className="absolute inset-0 bg-repeat pointer-events-none"
+    className="absolute inset-0 bg-repeat pointer-events-none dark:opacity-25"
     style={{
       backgroundImage: "url('/images/chat-bg.png')",
       backgroundSize: "400px",

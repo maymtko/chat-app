@@ -18,12 +18,12 @@ export default function Home() {
 
   if (loading || user) {
     return (
-      <main className="w-full h-screen flex items-center justify-center">
+      <main className="w-full h-screen flex items-center justify-center dark:bg-black">
       </main>
     )
   }
   return (
-    <main className="w-full h-screen flex items-center justify-center">
+    <main className="w-full h-screen flex items-center justify-center dark:bg-black">
       <AuthForm />
     </main>
   )
